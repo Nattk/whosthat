@@ -1,0 +1,23 @@
+{
+  "name": "whosthat",
+  "version": "1.0.0",
+  "description": "who's this ? app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nattk/whosthat.git"
+  },
+  "keywords": [
+    "app",
+    "facerecognition"
+  ],
+  "author": "Nattan/Dylan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nattk/whosthat/issues"
+  },
+  "homepage": "https://github.com/Nattk/whosthat#readme"
+}
