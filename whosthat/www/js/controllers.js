@@ -1,6 +1,6 @@
 angular.module('whosthat.controllers', ['ngCordova',])
 
-.controller('HomeCtrl', function($scope,loadingService,PhotoFactory) {
+.controller('HomeCtrl', function($scope,loadingService,PhotoFactory,WikiFactory) {
   loadingService.show();
 
   ionic.Platform.ready(function(){
@@ -12,7 +12,17 @@ $scope.tout= function(){
       PhotoFactory.uploadPhoto(response);
     });
 }
+
+$scope.name = "Jean Dujardin";
+
+$scope.wiki= function(){
+  WikiFactory.get($scope.name).then(function(response){
+      console.log(response);
+    });
+}
+
 })
+
 
 
 .controller('ResultsCtrl', function($scope,$cordovaCamera,$cordovaFileTransfer) {

@@ -37,7 +37,7 @@ angular.module('whosthat.services', ['ngCordova'])
     },
 
     uploadPhoto : function(imageURI){
-      document.addEventListener('deviceready', function () {
+      document.addEventListener('deviceready', function() {
         alert(imageURI);
         var server = "http://shazoom.alwaysdata.net/upload/upload.php";
         $cordovaFileTransfer.upload(server, imageURI, options)
@@ -52,6 +52,36 @@ angular.module('whosthat.services', ['ngCordova'])
       }, false);
     }
 }})
+
+//Factory which get Wiki informations from the actor
+.factory('WikiFactory', function($http,$q){
+  const API_URL ="https://fr.wikipedia.org/w/api.php?&action=query&format=json&callback=JSON_CALLBACK&prop=extracts&exintro=&explaintext=&indexpageids=&titles=";
+
+  return {
+
+    get  : function(name){
+      var deferred = $q.defer();
+      $http.jsonp(API_URL+name, function(data){
+        return data;
+      })
+       .then(function(response){
+         var pageId = response.data.query.pageids[0];
+         var dataObj = {
+          title: response.data.query.pages[pageId].title,
+          extract: response.data.query.pages[pageId].extract
+         }
+         deferred.resolve(dataObj);
+       },
+        function(response){
+          deferred.reject(response);
+          alert(response.data);
+
+        });
+        return deferred.promise;
+
+    }
+  }
+})
 
 .service('loadingService', loadingService);
 
