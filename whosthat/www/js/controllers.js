@@ -1,6 +1,21 @@
 angular.module('whosthat.controllers', ['ngCordova'])
 
-.controller('HomeCtrl', function($scope,$cordovaCamera) {
+.controller('HomeCtrl', function($scope,$cordovaCamera,$cordovaFileTransfer,$ionicLoading) {
+
+ $scope.show = function() {
+    $ionicLoading.show({
+     templateUrl: 'templates/loading.html',
+    }).then(function(){
+       console.log("The loading indicator is now displayed");
+       $scope.hide();
+    });
+  };
+  $scope.show();
+  $scope.hide = function(){
+    $ionicLoading.hide().then(function(){
+       console.log("The loading indicator is now hidden");
+    });
+  };
 
   $scope.takePhoto = function () {
                  var options = {
@@ -20,11 +35,25 @@ angular.module('whosthat.controllers', ['ngCordova'])
                    }, function (err) {
                        // An error occured. Show a message to the user
                    });
+  }.then(function(src){
+    $scope.uploadPhoto(src);
+  });
+  $scope.uploadPhoto = function(){
+    document.addEventListener('deviceready', function () {
+      var server = "http://shazoom.alwaysdata.net/upload/upload.php";
+      $cordovaFileTransfer.upload(server, filePath, options)
+      .then(function(result) {
+        // Success!
+      }, function(err) {
+        // Error
+      }, function (progress) {
+        // constant progress updates
+      });
+
+    }, false);
   }
 })
 
-.controller('LoadingCtrl', function($scope,$cordovaCamera) {
-})
 
-.controller('ResultsCtrl', function($scope,$cordovaCamera) {
+.controller('ResultsCtrl', function($scope,$cordovaCamera,$cordovaFileTransfer) {
 });
