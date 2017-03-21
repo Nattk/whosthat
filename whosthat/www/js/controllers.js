@@ -1,6 +1,6 @@
 angular.module('whosthat.controllers', ['ngCordova',])
 
-.controller('HomeCtrl', function($scope,loadingService,PhotoFactory) {
+.controller('HomeCtrl', function($scope,loadingService,photoService, $cordovaFileTransfer) {
   loadingService.show();
 
   ionic.Platform.ready(function(){
@@ -8,12 +8,12 @@ angular.module('whosthat.controllers', ['ngCordova',])
       loadingService.hide();
 });
 $scope.tout= function(){
-  PhotoFactory.takePhoto().then(function(response){
-      PhotoFactory.uploadPhoto(response);
-    });
+  photoService.takePhoto().then(function(response){
+    photoService.uploadPhoto(response);
+  })
 }
+
 })
-
-
+ 
 .controller('ResultsCtrl', function($scope,$cordovaCamera,$cordovaFileTransfer) {
 });
