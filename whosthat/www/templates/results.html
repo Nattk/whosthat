@@ -1,5 +1,14 @@
 <ion-view view-title="Results">
-  <ion-content>
-    Results
+  <ion-content class="padding">
+    <ion-list>
+  	<ion-list-header class="resultTitle">
+ 	  trouvé ! {{infos.title}}
+	</ion-list-header>
+	<ion-item>
+		<img src="img/jean.jpg" alt="jean dujardin">
+	</ion-item>
+	{{infos.extract}}
+	<button class="button button-full button-assertive" ng-click="openLink()">Page wikipédia de {{infos.title}}</button>
+  </ion-list>	
   </ion-content>
 </ion-view>
