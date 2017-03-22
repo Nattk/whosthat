@@ -37,6 +37,16 @@
 	color:white !important;
 }
 
+.bar-stable .back-button{
+	color:white !important;
+}
+
+ion-item.infos-text{
+	white-space: normal !important;
+	text-align: justify;
+	text-justify: inter-word;
+}
+
 ion-item img{
 	max-height: 300px;
 }

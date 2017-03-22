@@ -2,16 +2,17 @@
   <ion-content class="padding">
     <ion-list>
   	<ion-list-header class="resultTitle">
- 	  trouvé ! {{infos.title}}
+ 	    <h1>Trouvé ! </h1>
+      <h2>{{infos.title}}</h2>
 	</ion-list-header>
 	<ion-item>
-		<img src="img/jean.jpg" alt="jean dujardin">
+		<img src="img/logo.png" alt="jean dujardin">
 	</ion-item>
   <ion-item class="infos-text">
     {{infos.extract}}
   </ion-item>
   <ion-item>
-    <button class="button buttonStyle" ng-click="openLink()">Page wikipédia de {{infos.title}}</button>
+    <button class="button buttonStyle" ng-click="openLink()">Plus d'infos sur {{infos.title}}</button>
   </ion-item>
   </ion-list>
   </ion-content>
