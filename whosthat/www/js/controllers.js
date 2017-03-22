@@ -18,18 +18,18 @@ $scope.tout= function(){
     });
 }
 
-
-$scope.compare= function(){
-  FaceCompare.compare().then(function(response){
-      FaceCompare.confidenceCheck(response).then(function(result){
-        $scope.name = result;
+$scope.compare= function(result){
+  FaceCompare.compare(result).then(function(response){
+      FaceCompare.confidenceCheck(response).then(function(matches){
+        alert(matches[0].name);
+        $scope.name = matches[0].name;
         $scope.wiki();
       })
-      $scope.name = FaceCompare.confidenceCheck(response)
   });
 };
 $scope.infos = {};
 $scope.wiki= function(){
+
    $scope.name = $scope.name.replace(/ /g, '_');
     var arr = [];
     for(var i=0; i<$scope.name.length;i++) {

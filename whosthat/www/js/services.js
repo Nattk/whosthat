@@ -11,24 +11,27 @@ angular.module('whosthat.services', ['ngCordova'])
   return{
 
     compareCheck : function(url1,item){
+      alert('check');
+
       var deferred = $q.defer();
       $http.post(API_URL + API_KEY + '&api_secret=' + API_SECRET + '&image_url1=' +url1+ '&image_url2='+SERVER_URL+'ref/'+item)
       .then(function(response){
-
         deferred.resolve({name:item,confidence:response.data.confidence})
       },function(err){
         deferred.reject(err);
+
       });
       return deferred.promise;
     } ,
 
     compare : function(result){
 
+      alert('compare'+result);
       var deferred = $q.defer();
       var img_links =[];
       var promises = [];
       var url1='http://shazoom.alwaysdata.net/upload/'+result;
-      var url2='https://image.noelshack.com/fichiers/2015/32/1438766535-ryan-reynolds.jpg';
+      alert(url1);
       var my = this ;
 
       $http.jsonp(SERVER_URL+'scandir.php?callback=JSON_CALLBACK').then(function(response){
@@ -48,6 +51,7 @@ angular.module('whosthat.services', ['ngCordova'])
           });
 
       },function(err){
+        alert(err);
         deferred.reject(err);
       });
 
@@ -55,17 +59,20 @@ angular.module('whosthat.services', ['ngCordova'])
     },
 
     confidenceCheck: function(datas){
+      alert(JSON.stringify(datas))
+      var deferred = $q.defer();
       var matches = [];
       datas.forEach(function(item,index){
-        if(item.confidence > 75){
+        if(item.confidence > 70){
           matches.push(item);
         }
         else{
-          console.log('none');
+          alert('none');
         }
       });
-      console.log(matches);
-      return matches;
+      alert(JSON.stringify(matches));
+      deferred.resolve(matches);
+      return deferred.promise;
 
   }
 	}
@@ -73,11 +80,14 @@ angular.module('whosthat.services', ['ngCordova'])
 //Factory which get Wiki informations from the actor
 
 .factory('WikiFactory', function($http,$q){
+
   const API_URL ="https://fr.wikipedia.org/w/api.php?&action=query&format=json&callback=JSON_CALLBACK&prop=extracts&exintro=&explaintext=&indexpageids=&titles=";
 
   return {
 
     get  : function(name){
+      alert('wiki');
+
       var deferred = $q.defer();
       $http.jsonp(API_URL+name, function(data){
         return data;
@@ -116,10 +126,11 @@ function loadingService($ionicLoading){
 }
 
 
-function photoService($http,$cordovaCamera,$cordovaFileTransfer){
+function photoService($http,$q,$cordovaCamera,$cordovaFileTransfer){
+
  	this.takePhoto = function(){
       var options = {
-        quality: 40,
+        quality: 80,
         destinationType: Camera.DestinationType.FILE_URI,
         sourceType: Camera.PictureSourceType.CAMERA,
         allowEdit: false,
@@ -127,7 +138,8 @@ function photoService($http,$cordovaCamera,$cordovaFileTransfer){
         targetWidth: 300,
         targetHeight: 300,
         popoverOptions: CameraPopoverOptions,
-        saveToPhotoAlbum: true
+        saveToPhotoAlbum: true,
+        correctOrientation: true
       };
 
       return $cordovaCamera.getPicture(options)
@@ -144,16 +156,16 @@ function photoService($http,$cordovaCamera,$cordovaFileTransfer){
    	 	options.fileName = response.substr(response.lastIndexOf('/') +1);
    	 	options.mimeType = "image/jpeg";
    	 	options.chunkedMode = false;
-        $cordovaFileTransfer.upload(server, response, options, trustAllHosts)
+      $cordovaFileTransfer.upload(server, response, options, trustAllHosts)
         .then(function(result) {
             deferred.resolve(options.fileName);
-            // alert(JSON.stringify(result));
+
           }, function(err) {
-            // alert(JSON.stringify(err));
             deferred.reject(err);
+
           }, function (progress) {
             // constant progress updates
           });
-      return deferred.promise;
+          return deferred.promise
     }
 	}
