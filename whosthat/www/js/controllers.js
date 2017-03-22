@@ -12,7 +12,9 @@ angular.module('whosthat.controllers', ['ngCordova',])
 
 $scope.tout= function(){
   photoService.takePhoto().then(function(response){
-      photoService.uploadPhoto(response);
+      photoService.uploadPhoto(response).then(function(result){
+        $scope.compare(result);
+      })
     });
 }
 

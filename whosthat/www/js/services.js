@@ -17,18 +17,17 @@ angular.module('whosthat.services', ['ngCordova'])
 
         deferred.resolve({name:item,confidence:response.data.confidence})
       },function(err){
-        alert(JSON.stringify(err));
         deferred.reject(err);
       });
       return deferred.promise;
     } ,
 
-    compare : function(){
+    compare : function(result){
 
       var deferred = $q.defer();
       var img_links =[];
       var promises = [];
-      var url1='https://aspenpeak-magazine.com/get/files/image/migration/11670_content_robert-deniro-aspen-peak-1-1.jpg';
+      var url1='http://shazoom.alwaysdata.net/upload/'+result;
       var url2='https://image.noelshack.com/fichiers/2015/32/1438766535-ryan-reynolds.jpg';
       var my = this ;
 
@@ -49,7 +48,6 @@ angular.module('whosthat.services', ['ngCordova'])
           });
 
       },function(err){
-        alert(JSON.stringify(err));
         deferred.reject(err);
       });
 
@@ -57,21 +55,17 @@ angular.module('whosthat.services', ['ngCordova'])
     },
 
     confidenceCheck: function(datas){
-      var deferred = $q.defer();
       var matches = [];
       datas.forEach(function(item,index){
         if(item.confidence > 75){
           matches.push(item);
         }
         else{
+          console.log('none');
         }
       });
-      var matcheName = matches[0].name
-      var n = matcheName.indexOf('_');
-      matcheName = matcheName.substring(0, n !=-1 ? n : matcheName.length);
-      matcheName = matcheName.replace(/-/g, ' ')
-      deferred.resolve(matcheName);
-      return deferred.promise;
+      console.log(matches);
+      return matches;
 
   }
 	}
@@ -90,7 +84,6 @@ angular.module('whosthat.services', ['ngCordova'])
       })
        .then(function(response){
          var pageId = response.data.query.pageids[0];
-         console.log(response);
          var dataObj = {
           title: response.data.query.pages[pageId].title,
           extract: response.data.query.pages[pageId].extract
@@ -126,7 +119,7 @@ function loadingService($ionicLoading){
 function photoService($http,$cordovaCamera,$cordovaFileTransfer){
  	this.takePhoto = function(){
       var options = {
-        quality: 1,
+        quality: 40,
         destinationType: Camera.DestinationType.FILE_URI,
         sourceType: Camera.PictureSourceType.CAMERA,
         allowEdit: false,
@@ -143,6 +136,7 @@ function photoService($http,$cordovaCamera,$cordovaFileTransfer){
     },
 
     this.uploadPhoto = function(response){
+      var deferred = $q.defer();
     	var server = "http://shazoom.alwaysdata.net/upload.php";
     	var trustAllHosts = true;
    	 	var options = new FileUploadOptions();
@@ -152,11 +146,14 @@ function photoService($http,$cordovaCamera,$cordovaFileTransfer){
    	 	options.chunkedMode = false;
         $cordovaFileTransfer.upload(server, response, options, trustAllHosts)
         .then(function(result) {
-            alert(JSON.stringify(result));
+            deferred.resolve(options.fileName);
+            // alert(JSON.stringify(result));
           }, function(err) {
-            alert(JSON.stringify(err));
+            // alert(JSON.stringify(err));
+            deferred.reject(err);
           }, function (progress) {
             // constant progress updates
           });
+      return deferred.promise;
     }
 	}
