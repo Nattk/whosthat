@@ -1,7 +1,6 @@
 angular.module('whosthat.services', ['ngCordova'])
 
 .factory('PhotoFactory', function($http,$q,$cordovaCamera,$cordovaFileTransfer) {
-  const API_URL ="http://greenvelvet.alwaysdata.net/kwick/api/";
 
   return {
 
@@ -55,21 +54,70 @@ angular.module('whosthat.services', ['ngCordova'])
 
 
 .factory('FaceCompare', function($http,$q) {
-
+  const SERVER_URL ="http://shazoom.alwaysdata.net/";
   const API_KEY = 'Vrw1X_hkh_ZLiP2CXuX3iUbJgY9Oe5Cs';
   const API_SECRET = 'GBYvqVlQxdEbfGMeQBLmmoFFmTYsBgMN';
   const API_URL = 'https://api-us.faceplusplus.com/facepp/v3/compare?api_key=';
+
   return{
 
-    compare : function(url1,url2){
-      url1='https://pbs.twimg.com/profile_images/734121846275198976/jx-E4sWp_400x400.jpg';
-      url2='https://image.noelshack.com/fichiers/2015/32/1438766535-ryan-reynolds.jpg';
+    compareCheck : function(url1,item){
+      var deferred = $q.defer();
+      $http.post(API_URL + API_KEY + '&api_secret=' + API_SECRET + '&image_url1=' +url1+ '&image_url2='+SERVER_URL+'ref/'+item)
+      .then(function(response){
 
-      $http.post(API_URL + API_KEY + '&api_secret=' + API_SECRET + '&image_url1=' +url1+ '&image_url2='+url2 ).then(function(data){
-        console.log(data);
-      }, function(err){
-        console.log(err);
+        deferred.resolve({name:item,confidence:response.data.confidence})
+      },function(err){
+        deferred.reject(err);
       });
+      return deferred.promise;
+    } ,
+
+    compare : function(){
+
+      var deferred = $q.defer();
+      var img_links =[];
+      var promises = [];
+      var url1='https://aspenpeak-magazine.com/get/files/image/migration/11670_content_robert-deniro-aspen-peak-1-1.jpg';
+      var url2='https://image.noelshack.com/fichiers/2015/32/1438766535-ryan-reynolds.jpg';
+      var my = this ;
+
+      $http.jsonp(SERVER_URL+'scandir.php?callback=JSON_CALLBACK').then(function(response){
+          response.data.forEach(function(item){
+            img_links.push(item);
+          });
+
+        return img_links
+        }).then(function(links){
+
+          links.forEach(function(item){
+            promises.push(my.compareCheck(url1,item));
+          });
+
+          $q.all(promises).then(function(data){
+            deferred.resolve(data);
+          });
+
+      },function(err){
+        deferred.reject(err);
+      });
+
+      return deferred.promise;
+    },
+
+    confidenceCheck: function(datas){
+      var matches = [];
+      datas.forEach(function(item,index){
+        if(item.confidence > 75){
+          matches.push(item);
+        }
+        else{
+          console.log('none');
+        }
+      });
+      console.log(matches);
+      return matches;
+
     }
 
   }

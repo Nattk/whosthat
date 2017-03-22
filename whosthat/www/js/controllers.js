@@ -14,7 +14,9 @@ $scope.tout= function(){
 }
 
 $scope.compare= function(){
-  FaceCompare.compare();
+  FaceCompare.compare().then(function(response){
+      FaceCompare.confidenceCheck(response);
+  });
 }
 })
 
