@@ -15,8 +15,9 @@ angular.module('whosthat', ['ionic', 'whosthat.controllers', 'whosthat.services'
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider,$cordovaInAppBrowserProvider) {
+.config(function($stateProvider, $urlRouterProvider,$cordovaInAppBrowserProvider, $httpProvider) {
 
+$httpProvider.defaults.headers.common;
 
 $stateProvider
 
@@ -35,7 +36,7 @@ $stateProvider
     })
 
     .state('results', {
-      url: '/results',
+      url: '/results/:name',
         templateUrl: 'templates/results.html',
         controller: 'ResultsCtrl',
         controllerAs: 'rsltCtrl'

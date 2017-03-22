@@ -17,6 +17,7 @@ angular.module('whosthat.services', ['ngCordova'])
 
         deferred.resolve({name:item,confidence:response.data.confidence})
       },function(err){
+        alert(JSON.stringify(err));
         deferred.reject(err);
       });
       return deferred.promise;
@@ -48,6 +49,7 @@ angular.module('whosthat.services', ['ngCordova'])
           });
 
       },function(err){
+        alert(JSON.stringify(err));
         deferred.reject(err);
       });
 
@@ -55,17 +57,21 @@ angular.module('whosthat.services', ['ngCordova'])
     },
 
     confidenceCheck: function(datas){
+      var deferred = $q.defer();
       var matches = [];
       datas.forEach(function(item,index){
         if(item.confidence > 75){
           matches.push(item);
         }
         else{
-          console.log('none');
         }
       });
-      console.log(matches);
-      return matches;
+      var matcheName = matches[0].name
+      var n = matcheName.indexOf('_');
+      matcheName = matcheName.substring(0, n !=-1 ? n : matcheName.length);
+      matcheName = matcheName.replace(/-/g, ' ')
+      deferred.resolve(matcheName);
+      return deferred.promise;
 
   }
 	}
@@ -84,6 +90,7 @@ angular.module('whosthat.services', ['ngCordova'])
       })
        .then(function(response){
          var pageId = response.data.query.pageids[0];
+         console.log(response);
          var dataObj = {
           title: response.data.query.pages[pageId].title,
           extract: response.data.query.pages[pageId].extract
