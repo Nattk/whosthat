@@ -15,7 +15,8 @@ angular.module('whosthat', ['ionic', 'whosthat.controllers', 'whosthat.services'
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider,$cordovaInAppBrowserProvider) {
+
 
 $stateProvider
 
