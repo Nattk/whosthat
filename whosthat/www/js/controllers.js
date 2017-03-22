@@ -27,11 +27,27 @@ $scope.wiki= function(){
 
 
 
-.controller('ResultsCtrl', function($scope,$cordovaCamera,$rootScope,$cordovaFileTransfer) {
+.controller('ResultsCtrl', function($scope,$cordovaCamera,$rootScope,$cordovaFileTransfer,$cordovaInAppBrowser) {
   $scope.openLink = function(){
     $scope.articleName = $rootScope.infos.title.replace(' ','_');
     $scope.link = "https://fr.wikipedia.org/wiki/"+$scope.articleName;
     console.log($scope.link)
-    window.open($scope.link, '_system', 'location=yes ');
-  }
+    var options = {
+        location: 'yes',
+        clearcache: 'yes',
+        toolbar: 'no'
+      };
+      document.addEventListener("deviceready", function () {
+
+      $cordovaInAppBrowser.open($scope.link , '_blank', options)
+        .then(function(event) {
+          // success
+        })
+        .catch(function(event) {
+          // error
+        });
+
+        }, false);
+      };
+
 });
