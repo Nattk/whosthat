@@ -5,6 +5,38 @@
 	width: 100%;
 }
 
+.container{
+	width:100vw;
+}
+.container .logo{
+		margin:10vh auto;
+		display: block;
+		width:60%;
+		height:60%;
+}
+
+.buttonStyle{
+	margin: 0 auto;
+	display:block;
+	background-color: #4B3C97;
+	border: solid 1px #4B3C97;
+	color:white;
+	transition: 0.5s ease-in-out;
+}
+
+.buttonStyle:hover{
+	background-color: white;
+	color: #4B3C97;
+}
+
+.bar-stable{
+	background-color: #4B3C97 !important;
+}
+
+.bar-stable .title{
+	color:white !important;
+}
+
 ion-item img{
 	max-height: 300px;
 }
