@@ -64,7 +64,6 @@ $scope.wiki= function(){
         toolbar: 'no'
       };
       document.addEventListener("deviceready", function () {
-
       $cordovaInAppBrowser.open($scope.link , '_blank', options)
         .then(function(event) {
           // success
