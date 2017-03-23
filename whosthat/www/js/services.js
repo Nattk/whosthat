@@ -71,7 +71,9 @@ angular.module('whosthat.services', ['ngCordova'])
         }
       });
       alert(JSON.stringify(matches));
+
       deferred.resolve(matches);
+
       return deferred.promise;
 
   }

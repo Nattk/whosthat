@@ -21,16 +21,27 @@ $scope.tout= function(){
 $scope.compare= function(result){
   FaceCompare.compare(result).then(function(response){
       FaceCompare.confidenceCheck(response).then(function(matches){
-        alert(matches[0].name);
-        $scope.name = matches[0].name;
+        alert('matches'+JSON.stringify(matches));
+        var matchName = matches[0].name;
+        alert('matchName'+matchName);
+          for(var i=0; i<matchName.length;i++) {
+                if (matchName[i] === "_"){
+                matchName =  matchName.split("");
+                matchName = matchName.splice(0, i);
+                matchName =  matchName.join('');
+                alert(matchName);
+                }
+            }
+        matchName = matchName.replace(/-/g,'_');
+        $scope.name = matchName;
+        alert($scope.name);
         $scope.wiki();
       })
   });
 };
 $scope.infos = {};
 $scope.wiki= function(){
-
-   $scope.name = $scope.name.replace(/ /g, '_');
+  alert("wiki"+$scope.name)
     var arr = [];
     for(var i=0; i<$scope.name.length;i++) {
         if ($scope.name[i] === "_") arr.push(i+1);
