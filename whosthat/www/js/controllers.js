@@ -1,18 +1,26 @@
 // Création du module controller
-angular.module('whosthat.controllers', ['ngCordova',])
+angular.module('whosthat.controllers', ['ngCordova'])
 // Création du controller home
 .controller('HomeCtrl', function($scope,loadingService,photoService,$cordovaFileTransfer,FaceCompare,WikiFactory,$rootScope,$state) {
+  $scope.inter = false;
  // lancement du loading a l'ouverture de l'app
   loadingService.show();
+  $scope.inter = true;
+
 // fermeture de loading lorsque la platform est ready
   ionic.Platform.ready(function(){
       // will execute when device is ready, or immediately if the device is already ready.
       loadingService.hide();
+      $scope.inter = false;
+
 });
 
 // lancement de la fonction tout() qui lance tout le process
 $scope.tout= function(){
   photoService.takePhoto().then(function(response){
+      $scope.inter = true;
+      loadingService.show();
+
       photoService.uploadPhoto(response).then(function(result){
         $scope.compare(result);
       })
@@ -62,6 +70,8 @@ $scope.wiki= function(){
 
   WikiFactory.get($scope.name).then(function(response){
       $rootScope.infos = response;
+      $scope.inter = false;
+      loadingService.hide();
       $state.go('results',{name : $scope.name,url :$scope.url} );
     });
 }
