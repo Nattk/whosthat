@@ -5,13 +5,13 @@
  	    <h1>Trouvé ! </h1>
       <h2>{{infos.title}}</h2>
 	</ion-list-header>
-	<ion-item>
-		<img src="img/logo.png" alt="jean dujardin">
+	<ion-item class="item-borderless">
+		<img ng-src="{{image}}" alt="{{infos.title}}">
 	</ion-item>
-  <ion-item class="infos-text">
+  <ion-item class="infos-text item-borderless">
     {{infos.extract}}
   </ion-item>
-  <ion-item>
+  <ion-item class="item-borderless">
     <button class="button buttonStyle" ng-click="openLink()">Plus d'infos sur {{infos.title}}</button>
   </ion-item>
   </ion-list>
