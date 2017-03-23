@@ -1,18 +1,35 @@
-/* Empty. Add your own CSS if you like */
+/*Loading style */
+.loader-container{
+	margin-top:calc(100vh/2);
+	transform:translate(0,-50%);
+}
+
+.loader-container h1{
+	color: #4B3C97 !important;
+	margin-bottom:5vh;"
+}
+.loader-container .logo{
+	display:block;
+	width:70%;
+	margin:0 auto;
+	margin-bottom:5vh;
+}
+
+.loader-container p{
+	color: #4B3C97;
+	margin-top:5vh;
+}
+
 .loading-container .loading{
 	height:100%;
 	background: white;
-
 }
 
 .spinner-android {
     stroke: #4b3c97;
 }
-.resultTitle{
-	text-transform: uppercase;
-	text-align: center;
-	width: 100%;
-}
+
+/* Home container */
 
 .container{
 	width:100vw;
@@ -23,6 +40,8 @@
 		width:60%;
 		height:60%;
 }
+
+/* Results buttons */
 
 .buttonStyle{
 	margin: 0 auto;
@@ -50,6 +69,7 @@
 	color:white !important;
 }
 
+/* Results items */
 ion-item.infos-text{
 	white-space: normal !important;
 	text-align: justify;
@@ -62,4 +82,10 @@ ion-item img{
 
 ion-list{
 	text-align: center;
+}
+
+.resultTitle{
+	text-transform: uppercase;
+	text-align: center;
+	width: 100%;
 }

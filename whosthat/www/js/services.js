@@ -1,8 +1,10 @@
 angular.module('whosthat.services', ['ngCordova'])
 .service('loadingService', loadingService)
-.service('photoService', photoService )
+.service('photoService', photoService)
 
 .factory('FaceCompare', function($http,$q) {
+
+  //définition des constantes
   const SERVER_URL ="http://shazoom.alwaysdata.net/";
   const API_KEY = 'Vrw1X_hkh_ZLiP2CXuX3iUbJgY9Oe5Cs';
   const API_SECRET = 'GBYvqVlQxdEbfGMeQBLmmoFFmTYsBgMN';
@@ -10,30 +12,34 @@ angular.module('whosthat.services', ['ngCordova'])
 
   return{
 
+    //appel de l'api pour la comparaison entre la capture et les photos du serveur
     compareCheck : function(url1,item){
-      alert('check');
 
       var deferred = $q.defer();
-      $http.post(API_URL + API_KEY + '&api_secret=' + API_SECRET + '&image_url1=' +url1+ '&image_url2='+SERVER_URL+'ref/'+item)
-      .then(function(response){
+      $http.post(API_URL + API_KEY + '&api_secret=' + API_SECRET + '&image_url1=' +url1+ '&image_url2='+SERVER_URL+'ref/'+item).then(function(response){
+
         deferred.resolve({name:item,confidence:response.data.confidence})
+
       },function(err){
+
         deferred.reject(err);
-
+        alert('une erreur s\'est produite');
       });
-      return deferred.promise;
-    } ,
 
+      return deferred.promise;
+    },
+
+    //liste les photos d'acteurs sur le serveur
+    //appel la fonction de comparaison
     compare : function(result){
 
-      alert('compare'+result);
       var deferred = $q.defer();
       var img_links =[];
       var promises = [];
       var url1='http://shazoom.alwaysdata.net/upload/'+result;
-      alert(url1);
       var my = this ;
 
+      //Fichier serveur permettant de listé les photos contenus dans le serveur
       $http.jsonp(SERVER_URL+'scandir.php?callback=JSON_CALLBACK').then(function(response){
           response.data.forEach(function(item){
             img_links.push(item);
@@ -42,43 +48,50 @@ angular.module('whosthat.services', ['ngCordova'])
         return img_links
         }).then(function(links){
 
+          //Envoi les promesses dans un tableau
           links.forEach(function(item){
             promises.push(my.compareCheck(url1,item));
           });
+
+          //Envoi un résulat que lorque que
+          //toutes les promesses sont exécutés
 
           $q.all(promises).then(function(data){
             deferred.resolve(data);
           });
 
       },function(err){
-        alert(err);
+        alert('une erreur s\'est produite');
         deferred.reject(err);
       });
 
       return deferred.promise;
     },
 
+    //Vérifie si le taux de confidence est assez élévé
+    //Renvoi un tableau avec les infos pertinentes
+
     confidenceCheck: function(datas){
-      alert(JSON.stringify(datas))
       var deferred = $q.defer();
       var matches = [];
       datas.forEach(function(item,index){
+
         if(item.confidence > 70){
           matches.push(item);
         }
         else{
-          alert('none');
+          //nothing
         }
-      });
-      alert(JSON.stringify(matches));
 
+      });
       deferred.resolve(matches);
 
       return deferred.promise;
 
-  }
+    }
 	}
 })
+
 //Factory which get Wiki informations from the actor
 
 .factory('WikiFactory', function($http,$q){
@@ -87,8 +100,8 @@ angular.module('whosthat.services', ['ngCordova'])
 
   return {
 
+    //Appel de l'api mediaWiki
     get  : function(name){
-      alert('wiki');
 
       var deferred = $q.defer();
       $http.jsonp(API_URL+name, function(data){
@@ -96,15 +109,18 @@ angular.module('whosthat.services', ['ngCordova'])
       })
        .then(function(response){
          var pageId = response.data.query.pageids[0];
+
+         //objet avec réponse traité
          var dataObj = {
           title: response.data.query.pages[pageId].title,
           extract: response.data.query.pages[pageId].extract
          }
          deferred.resolve(dataObj);
        },
-        function(response){
-          deferred.reject(response);
-          alert(response.data);
+        function(err){
+
+          deferred.reject(err);
+          alert('une erreur s\'est produite');
 
         });
         return deferred.promise;
@@ -112,6 +128,9 @@ angular.module('whosthat.services', ['ngCordova'])
     }
   }
 });
+
+
+//Service de loading
 function loadingService($ionicLoading){
 	this.show = function() {
 		$ionicLoading.show({
@@ -128,9 +147,12 @@ function loadingService($ionicLoading){
 }
 
 
+//Service de  capture  et upload photo
 function photoService($http,$q,$cordovaCamera,$cordovaFileTransfer){
 
+  //capture
  	this.takePhoto = function(){
+    
       var options = {
         quality: 80,
         destinationType: Camera.DestinationType.FILE_URI,
@@ -148,8 +170,9 @@ function photoService($http,$q,$cordovaCamera,$cordovaFileTransfer){
 
 
     },
-
+    //upload sur le server
     this.uploadPhoto = function(response){
+
       var deferred = $q.defer();
     	var server = "http://shazoom.alwaysdata.net/upload.php";
     	var trustAllHosts = true;
@@ -158,12 +181,14 @@ function photoService($http,$q,$cordovaCamera,$cordovaFileTransfer){
    	 	options.fileName = response.substr(response.lastIndexOf('/') +1);
    	 	options.mimeType = "image/jpeg";
    	 	options.chunkedMode = false;
+
       $cordovaFileTransfer.upload(server, response, options, trustAllHosts)
         .then(function(result) {
             deferred.resolve(options.fileName);
 
           }, function(err) {
             deferred.reject(err);
+            alert('une erreur est survenu lors de l\'upload')
 
           }, function (progress) {
             // constant progress updates

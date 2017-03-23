@@ -18,6 +18,7 @@ angular.module('whosthat', ['ionic', 'whosthat.controllers', 'whosthat.services'
 // Configuraton des différentes states
 .config(function($stateProvider, $urlRouterProvider,$cordovaInAppBrowserProvider, $httpProvider) {
 
+//http headers par default
 $httpProvider.defaults.headers.common;
 
 $stateProvider
